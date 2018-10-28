@@ -10,10 +10,10 @@ package com.ntak.deepcloner;
  * @author Aashutos Kakshepati
  *
  */
-public interface CloneRule {
+public interface CloneRule<K> {
 
-	public void setRuleContext(DeepCloner context); // For any nested/recursive evaluation of cloning process
-	public <K> boolean isInstanceOf(K object);
-	public <K> K clone(K object);
+	public void setRuleContext(DeepCloner context); // For any nested evaluation of cloning process
+	public boolean isInstanceOf(Object object);
+	public K clone(Object object);
 	
 }

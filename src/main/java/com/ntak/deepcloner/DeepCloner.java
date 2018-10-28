@@ -7,8 +7,8 @@ import static com.ntak.deepcloner.exceptions.ExceptionMessages.ERR_CLONE_NOT_SUP
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import com.ntak.deepcloner.exceptions.UnsupportedCloneTypeException;
 
@@ -20,27 +20,28 @@ import com.ntak.deepcloner.exceptions.UnsupportedCloneTypeException;
  */
 public class DeepCloner {
 
-	private final Queue<CloneRule> cloneRules;
-	private final Lock lock;
+	private final Queue<CloneRule<?>> cloneRules;
+	private final ReadWriteLock lock;
 	
 	public DeepCloner() {
 		super();
 		cloneRules = new LinkedList<>();
-		lock = new ReentrantLock();
+		lock = new ReentrantReadWriteLock(true);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <K> K deepClone(K o) {
 		if (o == null) {
 			throw new UnsupportedCloneTypeException(String.format(ERR_CLONE_NOT_SUP, "null", cloneRules.toString()));
 		}
 		
-		lock.lock();
-		for (CloneRule rule : cloneRules) {
+		lock.readLock().lock();
+		for (CloneRule<?> rule : cloneRules) {
 			if (rule.isInstanceOf(o)) {
-				return rule.clone(o);
+				return (K) rule.clone(o);
 			}
 		}
-		lock.unlock();
+		lock.readLock().unlock();
 	
 		throw new UnsupportedCloneTypeException(String.format(ERR_CLONE_NOT_SUP, o.getClass().getSimpleName(), cloneRules.toString()));
 	}
@@ -50,12 +51,12 @@ public class DeepCloner {
 	 * @param rule - Adds cloning functionality for a specific type
 	 * @return self for further additions
 	 */
-	public DeepCloner addCloneRule(CloneRule rule) {
+	public DeepCloner addCloneRule(CloneRule<?> rule) {
 		rule.setRuleContext(this);
 
-		lock.lock();
+		lock.writeLock().lock();
 		cloneRules.add(rule);
-		lock.unlock();
+		lock.writeLock().unlock();
 		
 		return this;
 	}
