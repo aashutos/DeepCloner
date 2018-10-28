@@ -4,6 +4,8 @@
 package com.ntak.deepcloner.exceptions;
 
 /**
+ *  Utility class containing exception messages.
+ *  
  *  @author Aashutos Kakshepati
  */
 public class ExceptionMessages {

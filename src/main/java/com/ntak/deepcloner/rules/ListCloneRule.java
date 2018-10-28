@@ -10,6 +10,8 @@ import com.ntak.deepcloner.CloneRule;
 import com.ntak.deepcloner.DeepCloner;
 
 /**
+ *  Clone Rule for cloning List objects.
+ * 
  *  @author Aashutos Kakshepati
  */
 public class ListCloneRule<T> implements CloneRule<List<T>> {

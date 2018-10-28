@@ -7,6 +7,8 @@ import com.ntak.deepcloner.CloneRule;
 import com.ntak.deepcloner.DeepCloner;
 
 /**
+ * 	Clone Rule used to clone Integer objects.
+ * 
  *  @author Aashutos Kakshepati
  */
 public class IntegerCloneRule implements CloneRule<Integer> {
