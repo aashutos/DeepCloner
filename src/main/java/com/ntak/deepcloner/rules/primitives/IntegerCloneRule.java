@@ -1,21 +1,16 @@
 /*
  *  (c) copyright 2018 92AK. All Rights Reserved.
  */
-package com.ntak.deepcloner.rules;
+package com.ntak.deepcloner.rules.primitives;
 
-import com.ntak.deepcloner.CloneRule;
-import com.ntak.deepcloner.DeepCloner;
+import com.ntak.deepcloner.PrimitiveCloneRule;
 
 /**
  * 	Clone Rule used to clone Integer objects.
  * 
  *  @author Aashutos Kakshepati
  */
-public class IntegerCloneRule implements CloneRule<Integer> {
-	
-	@Override
-	public void setRuleContext(DeepCloner context) {
-	}
+public class IntegerCloneRule extends PrimitiveCloneRule<Integer> {
 
 	@Override
 	public boolean isInstanceOf(Object object) {
@@ -27,5 +22,4 @@ public class IntegerCloneRule implements CloneRule<Integer> {
 		Integer srcInt = (Integer) object;
 		return new Integer(srcInt);
 	}
-
 }

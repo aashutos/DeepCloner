@@ -20,8 +20,8 @@ import com.ntak.deepcloner.exceptions.UnsupportedCloneTypeException;
  */
 public class DeepCloner {
 
-	private final Queue<CloneRule<?>> cloneRules;
-	private final ReadWriteLock lock;
+	protected final Queue<CloneRule<?>> cloneRules;
+	protected final ReadWriteLock lock;
 	
 	public DeepCloner() {
 		super();
@@ -47,7 +47,7 @@ public class DeepCloner {
 	}
 	
 	/**
-	 * Decorator method which adds cloning rules to the context for additional cloning functionality.
+	 * Decorator method which adds cloning rules to the context for additional cloning functionality. There are order guarantees on the clone rule collection as it uses a Queue implementation as the underlying Collection.
 	 * @param rule - Adds cloning functionality for a specific type
 	 * @return self for further additions
 	 */
@@ -61,4 +61,7 @@ public class DeepCloner {
 		return this;
 	}
 	
+	public DeepCloner genImmutableDeepCloner() {
+		return new ImmutableDeepCloner(this.cloneRules);
+	}
 }

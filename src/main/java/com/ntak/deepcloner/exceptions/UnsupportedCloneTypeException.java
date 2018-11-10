@@ -17,6 +17,5 @@ public class UnsupportedCloneTypeException extends RuntimeException {
 
 	public UnsupportedCloneTypeException(String message) {
 		super(message);
-	}
-	
+	}	
 }

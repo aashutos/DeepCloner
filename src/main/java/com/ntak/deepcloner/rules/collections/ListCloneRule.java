@@ -1,27 +1,19 @@
 /*
  *  (c) copyright 2018 92AK. All Rights Reserved.
  */
-package com.ntak.deepcloner.rules;
+package com.ntak.deepcloner.rules.collections;
 
 import java.util.Collections;
 import java.util.List;
 
-import com.ntak.deepcloner.CloneRule;
-import com.ntak.deepcloner.DeepCloner;
+import com.ntak.deepcloner.CombinatoryCloneRule;
 
 /**
- *  Clone Rule for cloning List objects.
+ *  Clone Rule for creating deep duplicates of a List of the same implementation.
  * 
  *  @author Aashutos Kakshepati
  */
-public class ListCloneRule<T> implements CloneRule<List<T>> {
-
-	DeepCloner context;
-	
-	@Override
-	public void setRuleContext(DeepCloner context) {
-		this.context = context;
-	}
+public class ListCloneRule<T> extends CombinatoryCloneRule<List<T>> {
 
 	@Override
 	public boolean isInstanceOf(Object object) {		
@@ -41,9 +33,9 @@ public class ListCloneRule<T> implements CloneRule<List<T>> {
 			}
 			
 			return cloneList;
-		} catch (InstantiationException | IllegalAccessException e) {
-			return Collections.EMPTY_LIST;
+		} catch (Exception e) {
+			List<T> errList = Collections.emptyList();
+			return errList;
 		}
 	}
-
 }
