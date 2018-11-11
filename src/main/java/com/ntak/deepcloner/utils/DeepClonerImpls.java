@@ -19,7 +19,6 @@ import com.ntak.deepcloner.rules.primitives.FloatCloneRule;
 import com.ntak.deepcloner.rules.primitives.IntegerCloneRule;
 import com.ntak.deepcloner.rules.primitives.LongCloneRule;
 import com.ntak.deepcloner.rules.primitives.ShortCloneRule;
-import com.ntak.deepcloner.rules.primitives.StringNonPoolCloneRule;
 import com.ntak.deepcloner.rules.primitives.StringPoolCloneRule;
 import com.ntak.deepcloner.rules.structures.PropertiesCloneRule;
 
@@ -33,51 +32,31 @@ public class DeepClonerImpls {
 	///// CLONE RULES /////
 	
 	// Clone Rules for Collections/Map types
-	public static final ImmutableArrayListCloneRule<Object> R_IMM_ARRAY_LIST = new ImmutableArrayListCloneRule<>();
-	public static final ListCloneRule<Object> R_LIST = new ListCloneRule<>();
-	public static final MapCloneRule<Object, Object> R_MAP = new MapCloneRule<>();
-	public static final QueueCloneRule<Object> R_QUEUE = new QueueCloneRule<>();
-	public static final SetCloneRule<Object> R_SET = new SetCloneRule<>();
+	private static final ImmutableArrayListCloneRule<Object> R_IMM_ARRAY_LIST = new ImmutableArrayListCloneRule<>();
+	private static final ListCloneRule<Object> R_LIST = new ListCloneRule<>();
+	private static final MapCloneRule<Object, Object> R_MAP = new MapCloneRule<>();
+	private static final QueueCloneRule<Object> R_QUEUE = new QueueCloneRule<>();
+	private static final SetCloneRule<Object> R_SET = new SetCloneRule<>();
 	
 	// Clone Rules for Complex (Structure) types
-	public static final PropertiesCloneRule R_PROPS = new PropertiesCloneRule();
+	private static final PropertiesCloneRule R_PROPS = new PropertiesCloneRule();
 	
 	// Clone Rules for Primitive and core types
-	public static final BigDecimalCloneRule R_BIG_D = new BigDecimalCloneRule();
-	public static final BigIntegerCloneRule R_BIG_I = new BigIntegerCloneRule();
-	public static final BooleanCloneRule R_BOOL = new BooleanCloneRule();
-	public static final ByteCloneRule R_BYTE = new ByteCloneRule();
-	public static final CharacterCloneRule R_CHAR = new CharacterCloneRule();
-	public static final DoubleCloneRule R_DOUBLE = new DoubleCloneRule();
-	public static final FloatCloneRule R_FLOAT = new FloatCloneRule();
-	public static final IntegerCloneRule R_INT = new IntegerCloneRule();
-	public static final LongCloneRule R_LONG = new LongCloneRule();
-	public static final ShortCloneRule R_SHORT = new ShortCloneRule();
-	public static final StringNonPoolCloneRule R_NO_POOL_STR = new StringNonPoolCloneRule();
+	private static final BigDecimalCloneRule R_BIG_D = new BigDecimalCloneRule();
+	private static final BigIntegerCloneRule R_BIG_I = new BigIntegerCloneRule();
+	private static final BooleanCloneRule R_BOOL = new BooleanCloneRule();
+	private static final ByteCloneRule R_BYTE = new ByteCloneRule();
+	private static final CharacterCloneRule R_CHAR = new CharacterCloneRule();
+	private static final DoubleCloneRule R_DOUBLE = new DoubleCloneRule();
+	private static final FloatCloneRule R_FLOAT = new FloatCloneRule();
+	private static final IntegerCloneRule R_INT = new IntegerCloneRule();
+	private static final LongCloneRule R_LONG = new LongCloneRule();
+	private static final ShortCloneRule R_SHORT = new ShortCloneRule();
 	
-	public static final StringPoolCloneRule R_POOL_STR = new StringPoolCloneRule();	
+	private static final StringPoolCloneRule R_POOL_STR = new StringPoolCloneRule();	
 	
-	///// DEEP CLONER IMPLEMENTATIONS /////
+	///// CLONER /////
 	
-	public static final DeepCloner IMMUTABLE_STANDARD_CLONER = new DeepCloner().addCloneRule(R_IMM_ARRAY_LIST)
-																			   .addCloneRule(R_LIST)
-																			   .addCloneRule(R_MAP)
-																			   .addCloneRule(R_QUEUE)
-																			   .addCloneRule(R_SET)
-																			   .addCloneRule(R_PROPS)
-																			   .addCloneRule(R_BIG_D)
-																			   .addCloneRule(R_BIG_I)
-																			   .addCloneRule(R_BOOL)
-																			   .addCloneRule(R_BYTE)
-																			   .addCloneRule(R_CHAR)
-																			   .addCloneRule(R_DOUBLE)
-																			   .addCloneRule(R_FLOAT)
-																			   .addCloneRule(R_INT)
-																			   .addCloneRule(R_LONG)
-																			   .addCloneRule(R_SHORT)
-																			   .addCloneRule(R_NO_POOL_STR)
-																			   .genImmutableDeepCloner();
-
 	/**
 	 * This implementation of DeepCloner does not clone String values, but reuses values found in the String Pool.
 	 */

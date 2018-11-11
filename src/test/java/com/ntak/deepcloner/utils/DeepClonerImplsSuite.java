@@ -3,8 +3,8 @@
  */
 package com.ntak.deepcloner.utils;
 
-import static org.junit.Assert.*;
-import static com.ntak.deepcloner.test.TestHelper.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,8 +13,6 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.mockito.MockitoAnnotations;
 
-import com.ntak.deepcloner.DeepCloner;
-import com.ntak.deepcloner.DeepClonerTest;
 import com.ntak.deepcloner.rules.collections.CollectionsCloneRuleTest;
 import com.ntak.deepcloner.rules.primitives.PrimitiveCloneRuleTest;
 import com.ntak.deepcloner.rules.structures.StructureCloneRuleTest;
@@ -24,50 +22,11 @@ import com.ntak.deepcloner.rules.structures.StructureCloneRuleTest;
  */
 @RunWith(Suite.class)
 @SuiteClasses({ 
-				DeepClonerImplsSuite.StandardDeepClonerPrimitiveTest.class,
-				DeepClonerImplsSuite.StandardDeepClonerCollectionsTest.class,
-				DeepClonerImplsSuite.StandardDeepClonerStructureTest.class,
 				DeepClonerImplsSuite.PassStrDeepClonerPrimitiveTest.class,
 				DeepClonerImplsSuite.PassStrDeepClonerCollectionsTest.class,
 				DeepClonerImplsSuite.PassStrDeepClonerStructureTest.class
 })
 public class DeepClonerImplsSuite {
-	
-	///// STANDARD DEEP CLONER TESTS /////
-	
-	public static class StandardDeepClonerPrimitiveTest extends PrimitiveCloneRuleTest {
-		@Before
-		@Override
-		public void setUp() {
-			context = DeepClonerImpls.IMMUTABLE_STANDARD_CLONER;
-		}
-		
-		@Test
-		public void cloneString() {			
-			String string = "Same String!";
-			String cloneString = context.deepClone(string);
-			
-			isPerfectPrimitiveClone(string, cloneString);
-		}
-	}
-
-	public static class StandardDeepClonerCollectionsTest extends CollectionsCloneRuleTest {
-		@Before
-		@Override
-		public void setUp() {
-			MockitoAnnotations.initMocks(this);
-			
-			context = DeepClonerImpls.IMMUTABLE_STANDARD_CLONER;
-		}
-	}
-	
-	public static class StandardDeepClonerStructureTest extends StructureCloneRuleTest {
-		@Before
-		@Override
-		public void setUp() {
-			context = DeepClonerImpls.IMMUTABLE_STANDARD_CLONER;
-		}
-	}
 	
 	///// STRING PASS THROUGH DEEP CLONER TESTS /////
 	
