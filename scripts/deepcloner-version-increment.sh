@@ -25,17 +25,25 @@
 # SOFTWARE.
 #
 
-echo "Parameters: $1 $2 $3"
+echo "Parameters :: VERSION STRING: $1; IS DRY RUN: $2; IS NON RELEASE TAG: $3"
 
+# IF NOT A DRY RUN THEN CHANGES ARE COMMITTED (Push Changes can be set in pom, but by default it is pushed when it is not a dry run)
 if [ "false" = $2 ]
 then
   COMMIT="versions:commit"
-  CMD_TAG="versions:set-scm-tag scm:tag"
+  CMD_TAG="versions:set-scm-tag scm:tag scm:branch"
 else
   COMMIT="versions:revert"
 fi
 
-TAG="RELEASE-$1"
+# NOT A RELEASE TAG AND SO NO NEW BRANCH CREATED. IT IS TAGGED OF A BRANCH/VERSION BRANCH FOR FIXES (POSSIBLY FOR LTS VERSIONS etc.)
+if [ "build-inc" = $3 ]
+then
+	TAG="$1"
+  CMD_TAG="versions:set-scm-tag scm:tag"
+else
+	TAG="RELEASE-$1"
+fi
 
 if [ -z "$MAVEN_HOME" ]
 then
@@ -43,6 +51,6 @@ then
   exit 1
 else
   echo "Executing Version bump Application..."
-  $MAVEN_HOME/bin/mvn build-helper:parse-version versions:set $CMD_TAG $COMMIT -DnewVersion="$1" -DnewTag=$TAG -Dtag=$TAG -Dmessage="[RELEASE] Pushing tag: $TAG" -f ../pom.xml
+  $MAVEN_HOME/bin/mvn build-helper:parse-version versions:set $CMD_TAG $COMMIT -DnewVersion="$1" -DnewTag=$TAG -Dtag=$TAG -Dbranch=$TAG -Dmessage="[RELEASE] Pushing tag: $TAG" -f ../pom.xml
   echo "Execution complete."
 fi
