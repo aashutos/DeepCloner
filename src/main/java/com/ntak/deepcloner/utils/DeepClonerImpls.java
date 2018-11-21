@@ -3,24 +3,20 @@
  */
 package com.ntak.deepcloner.utils;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Queue;
+import java.util.Set;
+
 import com.ntak.deepcloner.DeepCloner;
-import com.ntak.deepcloner.rules.collections.ImmutableArrayListCloneRule;
-import com.ntak.deepcloner.rules.collections.ListCloneRule;
-import com.ntak.deepcloner.rules.collections.MapCloneRule;
-import com.ntak.deepcloner.rules.collections.QueueCloneRule;
-import com.ntak.deepcloner.rules.collections.SetCloneRule;
-import com.ntak.deepcloner.rules.primitives.BigDecimalCloneRule;
-import com.ntak.deepcloner.rules.primitives.BigIntegerCloneRule;
-import com.ntak.deepcloner.rules.primitives.BooleanCloneRule;
-import com.ntak.deepcloner.rules.primitives.ByteCloneRule;
-import com.ntak.deepcloner.rules.primitives.CharacterCloneRule;
-import com.ntak.deepcloner.rules.primitives.DoubleCloneRule;
-import com.ntak.deepcloner.rules.primitives.FloatCloneRule;
-import com.ntak.deepcloner.rules.primitives.IntegerCloneRule;
-import com.ntak.deepcloner.rules.primitives.LongCloneRule;
-import com.ntak.deepcloner.rules.primitives.ShortCloneRule;
-import com.ntak.deepcloner.rules.primitives.StringPoolCloneRule;
-import com.ntak.deepcloner.rules.structures.PropertiesCloneRule;
+import com.ntak.deepcloner.factories.CloneRuleFactory;
+import com.ntak.deepcloner.factories.StandardCloneRuleFactory;
 
 /**
  *  Some default implementations are available for use here.
@@ -29,53 +25,50 @@ import com.ntak.deepcloner.rules.structures.PropertiesCloneRule;
  */
 public class DeepClonerImpls {
 
-	///// CLONE RULES /////
+	static {
+		List<Class<?>> types = Arrays.asList(
+				   Arrays.asList("").getClass(),
+				   List.class, 
+				   Map.class, 
+				   Queue.class, 
+				   Set.class, 
+				   Properties.class, 																							   
+				   BigDecimal.class, 
+				   BigInteger.class, 
+				   Boolean.class, 
+				   Byte.class, 
+				   Character.class, 
+				   Double.class, 
+				   Float.class, 
+				   Integer.class, 
+				   Long.class, 
+				   Short.class,
+				   String.class
+		  );
+		
+		Map<String,List<String>> params = new HashMap<>();
+		
+		for (Class<?> type : types) {
+			params.put(type.getName(), null);
+		}
+		params.put(String.class.getName(), new LinkedList<String>());
+		INIT_PARAMS = params;
+		INIT_TYPES = types;
+	}
 	
-	// Clone Rules for Collections/Map types
-	private static final ImmutableArrayListCloneRule<Object> R_IMM_ARRAY_LIST = new ImmutableArrayListCloneRule<>();
-	private static final ListCloneRule<Object> R_LIST = new ListCloneRule<>();
-	private static final MapCloneRule<Object, Object> R_MAP = new MapCloneRule<>();
-	private static final QueueCloneRule<Object> R_QUEUE = new QueueCloneRule<>();
-	private static final SetCloneRule<Object> R_SET = new SetCloneRule<>();
-	
-	// Clone Rules for Complex (Structure) types
-	private static final PropertiesCloneRule R_PROPS = new PropertiesCloneRule();
-	
-	// Clone Rules for Primitive and core types
-	private static final BigDecimalCloneRule R_BIG_D = new BigDecimalCloneRule();
-	private static final BigIntegerCloneRule R_BIG_I = new BigIntegerCloneRule();
-	private static final BooleanCloneRule R_BOOL = new BooleanCloneRule();
-	private static final ByteCloneRule R_BYTE = new ByteCloneRule();
-	private static final CharacterCloneRule R_CHAR = new CharacterCloneRule();
-	private static final DoubleCloneRule R_DOUBLE = new DoubleCloneRule();
-	private static final FloatCloneRule R_FLOAT = new FloatCloneRule();
-	private static final IntegerCloneRule R_INT = new IntegerCloneRule();
-	private static final LongCloneRule R_LONG = new LongCloneRule();
-	private static final ShortCloneRule R_SHORT = new ShortCloneRule();
-	
-	private static final StringPoolCloneRule R_POOL_STR = new StringPoolCloneRule();	
+	///// CLONE FACTORY /////
+	public static final CloneRuleFactory DEFAULT_CLONE_FACTORY = new StandardCloneRuleFactory();
+	public static final Map<String, List<String>> INIT_PARAMS;
+	public static final List<Class<?>> INIT_TYPES;	
 	
 	///// CLONER /////
 	
 	/**
 	 * This implementation of DeepCloner does not clone String values, but reuses values found in the String Pool.
 	 */
-	public static final DeepCloner IMMUTABLE_PASS_STRING_CLONER = new DeepCloner().addCloneRule(R_IMM_ARRAY_LIST)
-																			   .addCloneRule(R_LIST)
-																			   .addCloneRule(R_MAP)
-																			   .addCloneRule(R_QUEUE)
-																			   .addCloneRule(R_SET)
-																			   .addCloneRule(R_PROPS)
-																			   .addCloneRule(R_BIG_D)
-																			   .addCloneRule(R_BIG_I)
-																			   .addCloneRule(R_BOOL)
-																			   .addCloneRule(R_BYTE)
-																			   .addCloneRule(R_CHAR)
-																			   .addCloneRule(R_DOUBLE)
-																			   .addCloneRule(R_FLOAT)
-																			   .addCloneRule(R_INT)
-																			   .addCloneRule(R_LONG)
-																			   .addCloneRule(R_SHORT)
-																			   .addCloneRule(R_POOL_STR)
+	public static final DeepCloner IMMUTABLE_PASS_STRING_CLONER = new DeepCloner(DEFAULT_CLONE_FACTORY)
+																			   .addFactoryCloneRule(
+																					   INIT_TYPES,
+																					  INIT_PARAMS)
 																			   .genImmutableDeepCloner();
 }

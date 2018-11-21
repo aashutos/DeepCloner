@@ -5,6 +5,7 @@ package com.ntak.deepcloner.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static com.ntak.deepcloner.utils.DeepClonerImpls.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,13 +29,15 @@ import com.ntak.deepcloner.rules.structures.StructureCloneRuleTest;
 })
 public class DeepClonerImplsSuite {
 	
+	
+	
 	///// STRING PASS THROUGH DEEP CLONER TESTS /////
 	
 	public static class PassStrDeepClonerPrimitiveTest extends PrimitiveCloneRuleTest {
 		@Before
 		@Override
 		public void setUp() {
-			context = DeepClonerImpls.IMMUTABLE_PASS_STRING_CLONER;
+			context = IMMUTABLE_PASS_STRING_CLONER;
 		}
 		
 		@Test
@@ -53,7 +56,7 @@ public class DeepClonerImplsSuite {
 		public void setUp() {
 			MockitoAnnotations.initMocks(this);
 			
-			context = DeepClonerImpls.IMMUTABLE_PASS_STRING_CLONER;
+			context = IMMUTABLE_PASS_STRING_CLONER;
 		}
 	}
 
@@ -61,7 +64,7 @@ public class DeepClonerImplsSuite {
 		@Before
 		@Override
 		public void setUp() {
-			context = DeepClonerImpls.IMMUTABLE_PASS_STRING_CLONER;
+			context = IMMUTABLE_PASS_STRING_CLONER;
 		}
 	}
 }

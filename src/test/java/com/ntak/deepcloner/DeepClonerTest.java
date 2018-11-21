@@ -1,9 +1,18 @@
 package com.ntak.deepcloner;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -15,8 +24,14 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import com.ntak.deepcloner.exceptions.UnsupportedCloneTypeException;
+import com.ntak.deepcloner.factories.CloneRuleFactory;
 import com.ntak.deepcloner.rules.primitives.IntegerCloneRule;
 
 import static com.ntak.deepcloner.exceptions.ExceptionMessages.*;
@@ -25,10 +40,36 @@ public class DeepClonerTest {
 
 	private DeepCloner cloner;
 	private IntegerCloneRule intCloneRule = new IntegerCloneRule();
+	@Mock
+	private CloneRuleFactory mockFactory;
+	@Mock
+	private CloneRule<?> mockRule;
 	
 	@Before
-	public void setUp() {
+	public void setUp() throws CloneNotSupportedException {
+		MockitoAnnotations.initMocks(this);
 		cloner = new DeepCloner();
+		
+    	doAnswer(new Answer<List<CloneRule<?>>>() {
+
+			@Override
+			public List<CloneRule<?>> answer(InvocationOnMock invocation) throws Throwable {				
+				mockRule.setRuleContext((DeepCloner) invocation.getArgument(0));
+				return new LinkedList<CloneRule<?>>(Arrays.asList(mockRule));
+			}
+    		
+    	}).when(mockFactory).createRuleSet(ArgumentMatchers.any(DeepCloner.class), ArgumentMatchers.any(List.class), ArgumentMatchers.any(Map.class));
+ 
+    	doAnswer(new Answer<CloneRule<?>>() {
+
+			@Override
+			public CloneRule<?> answer(InvocationOnMock invocation) throws Throwable {				
+				return mockRule;
+			}
+    		
+    	}).when(mockFactory).createRule(ArgumentMatchers.eq(Integer.class), ArgumentMatchers.any(List.class));
+ 
+    	
 	}
 	
     @Test(expected=UnsupportedCloneTypeException.class)
@@ -139,5 +180,54 @@ public class DeepClonerTest {
     	DeepCloner output = new DeepCloner().genImmutableDeepCloner();
     	assertTrue(output instanceof ImmutableDeepCloner);
     	output.addCloneRule(intCloneRule);
+    }
+    
+    @Test
+    public void testAddFactoryCloneRuleSetSuccess() throws CloneNotSupportedException {
+    	DeepCloner output = new DeepCloner(mockFactory);
+       	List<Class<?>> klasses = new LinkedList<>();
+    	klasses.add(Integer.class);
+    	
+    	output.addFactoryCloneRule(klasses, new HashMap<String, List<String>>());
+    	
+    	verify(mockFactory, times(1)).createRuleSet(ArgumentMatchers.eq(output), ArgumentMatchers.eq(klasses), ArgumentMatchers.any(Map.class));
+    	verify(mockRule, times(1)).setRuleContext(ArgumentMatchers.eq(output));
+    }
+    
+    @Test
+    public void testAddFactoryCloneRuleSetFailure() throws CloneNotSupportedException {
+    	doThrow(CloneNotSupportedException.class).when(mockFactory).createRuleSet(ArgumentMatchers.any(DeepCloner.class), ArgumentMatchers.any(List.class), ArgumentMatchers.any(Map.class));
+    	 
+    	DeepCloner output = new DeepCloner(mockFactory);
+       	List<Class<?>> klasses = new LinkedList<>();
+    	klasses.add(Boolean.class);
+    	
+    	output.addFactoryCloneRule(klasses, new HashMap<String, List<String>>());
+    	
+    	verify(mockFactory).createRuleSet(ArgumentMatchers.eq(output), ArgumentMatchers.eq(klasses), ArgumentMatchers.any(Map.class));
+    	verify(mockRule, never()).setRuleContext(ArgumentMatchers.eq(output));
+    }
+    
+    
+    @Test
+    public void testAddFactoryCloneRuleSuccess() throws CloneNotSupportedException {
+    	DeepCloner output = new DeepCloner(mockFactory);
+    	
+    	output.addFactoryCloneRule(Integer.class, new LinkedList<String>());
+    	
+    	verify(mockFactory, times(1)).createRule(ArgumentMatchers.eq(Integer.class), ArgumentMatchers.any(List.class));
+    	verify(mockRule, times(1)).setRuleContext(ArgumentMatchers.eq(output));
+    }
+    
+    @Test
+    public void testAddFactoryCloneRuleFailure() throws CloneNotSupportedException {
+    	doThrow(CloneNotSupportedException.class).when(mockFactory).createRule(ArgumentMatchers.eq(Integer.class), ArgumentMatchers.any(List.class));
+    	 
+    	DeepCloner output = new DeepCloner(mockFactory);
+    	
+    	output.addFactoryCloneRule(Integer.class, new LinkedList<String>());
+    	
+    	verify(mockFactory).createRule(ArgumentMatchers.eq(Integer.class), ArgumentMatchers.any(List.class));
+    	verify(mockRule, never()).setRuleContext(ArgumentMatchers.eq(output));
     }
 }

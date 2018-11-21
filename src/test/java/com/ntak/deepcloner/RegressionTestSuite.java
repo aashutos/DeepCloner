@@ -8,6 +8,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.ntak.deepcloner.rules.collections.CollectionsCloneRuleTest;
+import com.ntak.deepcloner.rules.factories.CloneRuleFactoryTest;
 import com.ntak.deepcloner.rules.primitives.PrimitiveCloneRuleTest;
 import com.ntak.deepcloner.rules.structures.StructureCloneRuleTest;
 import com.ntak.deepcloner.utils.DeepClonerImplsSuite;
@@ -21,7 +22,9 @@ import com.ntak.deepcloner.utils.DeepClonerImplsSuite;
 				CollectionsCloneRuleTest.class,
 				PrimitiveCloneRuleTest.class,
 				StructureCloneRuleTest.class,
+				CloneRuleFactoryTest.class,
 				DeepClonerImplsSuite.class
+				
 })
 public class RegressionTestSuite {
 

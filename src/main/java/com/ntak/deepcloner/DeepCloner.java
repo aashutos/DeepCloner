@@ -6,11 +6,15 @@ package com.ntak.deepcloner;
 import static com.ntak.deepcloner.exceptions.ExceptionMessages.ERR_CLONE_NOT_SUP;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import com.ntak.deepcloner.exceptions.UnsupportedCloneTypeException;
+import com.ntak.deepcloner.factories.CloneRuleFactory;
+import com.ntak.deepcloner.factories.StandardCloneRuleFactory;
 
 /**
  * Class encapsulating functionality to deep clone an object of a specified type.
@@ -22,11 +26,17 @@ public class DeepCloner {
 
 	protected final Queue<CloneRule<?>> cloneRules;
 	protected final ReadWriteLock lock;
+	protected final CloneRuleFactory factory;
 	
 	public DeepCloner() {
+		this(new StandardCloneRuleFactory());		
+	}
+	
+	public DeepCloner(CloneRuleFactory factory) {
 		super();
 		cloneRules = new LinkedList<>();
 		lock = new ReentrantReadWriteLock(true);
+		this.factory = factory;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -58,6 +68,38 @@ public class DeepCloner {
 		cloneRules.add(rule);
 		lock.writeLock().unlock();
 		
+		return this;
+	}
+	
+	public DeepCloner addFactoryCloneRule(List<Class<?>> klasses, Map<String,List<String>> paramMap) {
+		try {
+			List<CloneRule<?>> rules = factory.createRuleSet(this, klasses, paramMap);
+			if (rules != null) {
+				lock.writeLock().lock();
+				cloneRules.addAll(rules);
+				lock.writeLock().unlock();
+			}
+		} catch (CloneNotSupportedException e) {
+			// ignore failure - Warning should 
+		}
+
+		return this;
+	}
+	
+	public DeepCloner addFactoryCloneRule(Class<?> klass, List<String> param) {
+		try {
+			CloneRule<?> rule = factory.createRule(klass, param);
+			rule.setRuleContext(this);
+			
+			if (rule != null) {
+				lock.writeLock().lock();
+				cloneRules.add(rule);
+				lock.writeLock().unlock();
+			}
+		} catch (CloneNotSupportedException e) {
+			// ignore failure - Warning should 
+		}
+
 		return this;
 	}
 	
