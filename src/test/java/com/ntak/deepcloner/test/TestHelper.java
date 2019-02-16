@@ -35,6 +35,7 @@ public class TestHelper {
 	
 	
 	public static void isPerfectPrimitiveClone(Object src, Object clone) {
+		assertSame("Class types are identical", src.getClass(), clone.getClass());
 		assertEquals("The values are not equal.", src, clone);
 		assertNotSame("The values are the same.", src, clone);
 	}

@@ -14,4 +14,6 @@ public class ExceptionMessages {
 	public static final String ERR_OP_NOT_SUP = "The operation being performed is not supported by Deep Cloner.";
 	public static final String ERR_RULE_NOT_SUP = "The rule being requested is not supported by the Clone Rule factory.";
 	public static final String EXC_FACTORY_DOES_NOT_EXIST = "The factory specified does not exist. Factory Parameter passed in: %s.";
+	public static final String EXC_CLONE_RULE_NESTED_EXCEPTION = "Exception thrown while cloning process was attempted for clone rule: %s. Nested exception message: %s:%s";
+	
 }

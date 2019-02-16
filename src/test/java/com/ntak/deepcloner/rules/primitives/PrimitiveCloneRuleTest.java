@@ -31,6 +31,7 @@ public class PrimitiveCloneRuleTest {
 	private IntegerCloneRule intRule = new IntegerCloneRule();
 	private LongCloneRule longRule = new LongCloneRule();
 	private ShortCloneRule shortRule = new ShortCloneRule();
+	private CloneableCloneRule clnbleRule = new CloneableCloneRule();
 	private StringPoolCloneRule strPoolRule = new StringPoolCloneRule();	
 	
 	private StringNonPoolCloneRule strNPoolRule = new StringNonPoolCloneRule();
@@ -47,7 +48,8 @@ public class PrimitiveCloneRuleTest {
 			   .addCloneRule(floatRule)
 			   .addCloneRule(intRule)
 			   .addCloneRule(longRule)
-			   .addCloneRule(shortRule);
+			   .addCloneRule(shortRule)
+			   .addCloneRule(clnbleRule);
 	}
 
 	@Test
@@ -128,6 +130,48 @@ public class PrimitiveCloneRuleTest {
 		Short cloneShort = context.deepClone(shrt);
 		
 		isPerfectPrimitiveClone(shrt, cloneShort);
+	}
+	
+	private static class CloneablePOJO implements Cloneable {
+		
+		private String property;
+		
+		public CloneablePOJO(String property) {
+			this.property = property;
+		}
+		
+		@Override
+		protected Object clone() {
+			try {
+			return new CloneablePOJO(new String(this.property));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+		@Override
+		public boolean equals(Object other) {
+			if (other instanceof CloneablePOJO) {
+				if (other != null && ((CloneablePOJO) other).getProperty().equals(property)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		public String getProperty() {
+			return property;
+		}
+		
+	}
+	
+	@Test
+	public void cloneCloneable() {
+		Cloneable clSrc = new CloneablePOJO("lalala");
+		Cloneable clDup = context.deepClone(clSrc);
+		isPerfectPrimitiveClone(clSrc, clDup);
+		isPerfectPrimitiveClone(((CloneablePOJO)clSrc).getProperty(), ((CloneablePOJO)clDup).getProperty());
 	}
 	
 	@Test

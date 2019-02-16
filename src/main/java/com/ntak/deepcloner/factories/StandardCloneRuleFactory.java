@@ -24,6 +24,7 @@ import com.ntak.deepcloner.rules.primitives.BigIntegerCloneRule;
 import com.ntak.deepcloner.rules.primitives.BooleanCloneRule;
 import com.ntak.deepcloner.rules.primitives.ByteCloneRule;
 import com.ntak.deepcloner.rules.primitives.CharacterCloneRule;
+import com.ntak.deepcloner.rules.primitives.CloneableCloneRule;
 import com.ntak.deepcloner.rules.primitives.DoubleCloneRule;
 import com.ntak.deepcloner.rules.primitives.FloatCloneRule;
 import com.ntak.deepcloner.rules.primitives.IntegerCloneRule;
@@ -93,6 +94,9 @@ public class StandardCloneRuleFactory implements CloneRuleFactory {
 		}
 		if (Short.class.getName().equals(typeName)) {
 			return new ShortCloneRule();
+		}
+		if (Cloneable.class.getName().equals(typeName)) {
+			return new CloneableCloneRule();
 		}
 		if (String.class.getName().equals(typeName)) {
 			if (factoryParams.contains(NON_POOL_CLONE))

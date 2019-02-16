@@ -43,6 +43,7 @@ import com.ntak.deepcloner.rules.primitives.BigIntegerCloneRule;
 import com.ntak.deepcloner.rules.primitives.BooleanCloneRule;
 import com.ntak.deepcloner.rules.primitives.ByteCloneRule;
 import com.ntak.deepcloner.rules.primitives.CharacterCloneRule;
+import com.ntak.deepcloner.rules.primitives.CloneableCloneRule;
 import com.ntak.deepcloner.rules.primitives.DoubleCloneRule;
 import com.ntak.deepcloner.rules.primitives.FloatCloneRule;
 import com.ntak.deepcloner.rules.primitives.IntegerCloneRule;
@@ -114,6 +115,7 @@ public class CloneRuleFactoryTest {
 		  									 Float.class,
 		  									 Long.class,
 		  									 Short.class,
+		  									 Cloneable.class,
 		  									 String.class,
 		  									 List.class,
 		  									 Map.class,
@@ -138,12 +140,13 @@ public class CloneRuleFactoryTest {
 	   assertSame("Did not create Float Rule", FloatCloneRule.class, ruleSet.get(7).getClass());
 	   assertSame("Did not create Long Rule", LongCloneRule.class, ruleSet.get(8).getClass());
 	   assertSame("Did not create Short Rule", ShortCloneRule.class, ruleSet.get(9).getClass());
-	   assertSame("Did not create String Rule", StringPoolCloneRule.class, ruleSet.get(10).getClass());
-	   assertSame("Did not create List Rule", ListCloneRule.class, ruleSet.get(11).getClass());
-	   assertSame("Did not create Map Rule", MapCloneRule.class, ruleSet.get(12).getClass());
-	   assertSame("Did not create Queue Rule", QueueCloneRule.class, ruleSet.get(13).getClass());
-	   assertSame("Did not create Set Rule", SetCloneRule.class, ruleSet.get(14).getClass());
-	   assertSame("Did not create Properties Rule", PropertiesCloneRule.class, ruleSet.get(15).getClass());   
+	   assertSame("Did not create Cloneable Rule", CloneableCloneRule.class, ruleSet.get(10).getClass());
+	   assertSame("Did not create String Rule", StringPoolCloneRule.class, ruleSet.get(11).getClass());
+	   assertSame("Did not create List Rule", ListCloneRule.class, ruleSet.get(12).getClass());
+	   assertSame("Did not create Map Rule", MapCloneRule.class, ruleSet.get(13).getClass());
+	   assertSame("Did not create Queue Rule", QueueCloneRule.class, ruleSet.get(14).getClass());
+	   assertSame("Did not create Set Rule", SetCloneRule.class, ruleSet.get(15).getClass());
+	   assertSame("Did not create Properties Rule", PropertiesCloneRule.class, ruleSet.get(16).getClass());   
 	}
 
 	@Test(expected=CloneNotSupportedException.class)
