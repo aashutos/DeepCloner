@@ -38,6 +38,10 @@ public class PrimitiveCloneRuleTest {
 	
 	@Before
 	public void setUp() throws Exception {
+		setUpContext();
+	}
+
+	public void setUpContext() {
 		context = new DeepCloner();
 		context.addCloneRule(bigDRule)
 			   .addCloneRule(bigIRule)
@@ -168,6 +172,8 @@ public class PrimitiveCloneRuleTest {
 	
 	@Test
 	public void cloneCloneable() {
+		setUpContext();
+		
 		Cloneable clSrc = new CloneablePOJO("lalala");
 		Cloneable clDup = context.deepClone(clSrc);
 		isPerfectPrimitiveClone(clSrc, clDup);
@@ -196,4 +202,13 @@ public class PrimitiveCloneRuleTest {
 		assertEquals("The values are not equal.", string, cloneString);
 		assertSame("The values are not the same.", string, cloneString);
 	}	
+	
+	@Test
+	public void cloneWithHint() {
+		int input = 123;
+		int clone = context.deepClone(input, Integer.class);
+		
+		assertEquals("The values are not equal.", input, clone);
+		assertSame("The values are not the same.", input, clone);
+	}
 }

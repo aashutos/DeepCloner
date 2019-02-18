@@ -16,6 +16,7 @@ import com.ntak.deepcloner.exceptions.UnsupportedCloneTypeException;
 import com.ntak.deepcloner.factories.CloneRuleFactory;
 import com.ntak.deepcloner.factories.StandardCloneRuleFactory;
 
+import static com.ntak.deepcloner.utils.DeepClonerUtils.getCloneRuleErasureInformation;
 /**
  * Class encapsulating functionality to deep clone an object of a specified type.
  * 
@@ -50,6 +51,24 @@ public class DeepCloner {
 			if (rule.isInstanceOf(o)) {
 				return (K) rule.clone(o);
 			}
+		}
+		lock.readLock().unlock();
+	
+		throw new UnsupportedCloneTypeException(String.format(ERR_CLONE_NOT_SUP, o.getClass().getSimpleName(), cloneRules.toString()));
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <K> K deepClone(K o, Class<?> hintKlass) {
+		if (o == null) {
+			throw new UnsupportedCloneTypeException(String.format(ERR_CLONE_NOT_SUP, "null", cloneRules.toString()));
+		}
+		
+		lock.readLock().lock();
+		for (CloneRule<?> rule : cloneRules) {
+			if (getCloneRuleErasureInformation(rule.getClass()).equals(hintKlass))
+				if (rule.isInstanceOf(o)) {
+					return (K) rule.clone(o);
+				}
 		}
 		lock.readLock().unlock();
 	
