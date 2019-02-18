@@ -19,6 +19,7 @@ import com.ntak.deepcloner.utils.DeepClonerImplsSuite;
 @RunWith(Suite.class)
 @SuiteClasses({ 
 				DeepClonerTest.class,
+				ImmutableDeepClonerTest.class,
 				CollectionsCloneRuleTest.class,
 				PrimitiveCloneRuleTest.class,
 				StructureCloneRuleTest.class,

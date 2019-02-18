@@ -49,7 +49,9 @@ public static final DeepCloner IMMUTABLE_PASS_STRING_CLONER;
 
 `IMMUTABLE_PASS_STRING_CLONER` cloner will not duplicate String types and will reuse values from the String pool. It will also include the other (Non String) standard types that are specified in the below section. These cloners are immutable definitions and so are not designed to be changed within your program. Trying to add rules to these implementations will yield an _UnsupportOperationException_.
 
-Instances of rules will need to be generated on a per Deep Cloner context basis and cannot be shared. The contexts are set when rules are added to a Deep Cloner context. In the future, a _CloneRuleFactory_ could be used to generate rules instances. The immutable Deep Cloner instance will be decoupled from the Deep Cloner instance and so will have it own set of rule instances.
+Instances of rules will need to be generated on a per Deep Cloner context basis and cannot be shared. The contexts are set when rules are added to a Deep Cloner context. In the future, a _CloneRuleFactory_ could be used to generate rules instances.
+
+A _CloneRuleFactory_ has been provided as a means to generate Clone Rules. An amalgamating factory can be used to provide a sort of Chain of Responsbility approach to generating Clone Rules by visiting each factory sequentially. This can aid in decorating further custom clone rule factory functionality to the existing _StandardCloneRuleFactory_. This factory is passed in as a field for the DeepCloner as a means to create instances of CloneRule for that specific instance. This allows for the generation of multiple DeepCloner instances. The immutable Deep Cloner instance will be decoupled from the Deep Cloner instance and so will have it own set of rule instances.
 
 ### Supported Cloning types
 

@@ -5,6 +5,8 @@ package com.ntak.deepcloner;
 
 import static com.ntak.deepcloner.exceptions.ExceptionMessages.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -23,7 +25,26 @@ public class ImmutableDeepCloner extends DeepCloner {
 	 * Immutable Deep Cloner does not support the addition of new Clone Rules.
 	 * 
 	 */
+	@Override
 	public DeepCloner addCloneRule(CloneRule<?> rule) {
+		throw new UnsupportedOperationException(ERR_OP_NOT_SUP);
+	}
+	
+	/**
+	 * Immutable Deep Cloner does not support the addition of new Clone Rules.
+	 * 
+	 */
+	@Override
+	public DeepCloner addFactoryCloneRule(List<Class<?>> klasses, Map<String,List<String>> paramMap) {
+		throw new UnsupportedOperationException(ERR_OP_NOT_SUP);	
+	}
+	
+	/**
+	 * Immutable Deep Cloner does not support the addition of new Clone Rules.
+	 * 
+	 */
+	@Override
+	public DeepCloner addFactoryCloneRule(Class<?> klass, List<String> param) {
 		throw new UnsupportedOperationException(ERR_OP_NOT_SUP);
 	}
 }
